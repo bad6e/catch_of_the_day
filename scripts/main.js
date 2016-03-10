@@ -1,6 +1,19 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 
+var ReactRouter = require('react-router');
+var Router = ReactRouter.Router;
+var Route = ReactRouter.Route;
+var Navigation = ReactRouter.Navigation;
+
+//This does push state
+var createBrowserHistory = require('history/lib/createBrowserHistory');
+
+//Helpers
+var h = require('./helpers');
+
+
+
 //App
 
 var App = React.createClass({
@@ -34,7 +47,7 @@ var Header = React.createClass({
       </header>
     )
   }
-})
+});
 
 //Order
 var Order = React.createClass({
@@ -43,7 +56,7 @@ var Order = React.createClass({
       <p>Order</p>
     )
   }
-})
+});
 
 
 //Inventory
@@ -53,7 +66,7 @@ var Inventory = React.createClass({
       <p>Inventory</p>
     )
   }
-})
+});
 
 
 //Store Picker Component
@@ -64,12 +77,31 @@ var StorePicker = React.createClass({
     return (
       <form className="store-selector">
         <h2>Please Enter a Store</h2>
-        <input type="text" ref="storeId" />
+        <input type="text" ref="storeId" defaultValue={h.getFunName()} required/>
         <input type="Submit" />
       </form>
       )
   }
 });
 
+var NotFound = React.createClass({
 
-ReactDOM.render(<App/>, document.querySelector('#main'));
+  render : function() {
+    return (
+      <h1>404 Not Found</h1>
+    )
+  }
+});
+
+
+//Routes
+var routes = (
+  <Router history={createBrowserHistory()}>
+    <Route path="/" component={StorePicker} />
+    <Route path="/store/:storeID" component={App} />
+    <Route path="*" component={NotFound} />
+  </Router>
+)
+
+
+ReactDOM.render(routes, document.querySelector('#main'));
