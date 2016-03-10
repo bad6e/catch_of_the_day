@@ -4,8 +4,7 @@ var ReactDOM = require('react-dom');
 var ReactRouter = require('react-router');
 var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
-var Navigation = ReactRouter.Navigation;
-
+var History = ReactRouter.History;
 //This does push state
 var createBrowserHistory = require('history/lib/createBrowserHistory');
 
@@ -72,10 +71,17 @@ var Inventory = React.createClass({
 //Store Picker Component
 
 var StorePicker = React.createClass({
+  mixins : [History],
+  goToStore : function(event) {
+    event.preventDefault();
+    //get the data from the input
+    var storeId = this.refs.storeId.value;
+    this.history.pushState(null, '/store/' + storeId)
+  },
 
   render : function() {
     return (
-      <form className="store-selector">
+      <form className="store-selector" onSubmit={this.goToStore}>
         <h2>Please Enter a Store</h2>
         <input type="text" ref="storeId" defaultValue={h.getFunName()} required/>
         <input type="Submit" />
@@ -98,7 +104,7 @@ var NotFound = React.createClass({
 var routes = (
   <Router history={createBrowserHistory()}>
     <Route path="/" component={StorePicker} />
-    <Route path="/store/:storeID" component={App} />
+    <Route path="/store/:storeId" component={App} />
     <Route path="*" component={NotFound} />
   </Router>
 )
